@@ -70,10 +70,9 @@ void AAuraPlayerController::CursorTrace()
 	}
 
 	// Store the currently hit actor in a temporary variable.
-	auto* CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor());
-    
+
 	// If we've moved from one actor to another, unhighlight the last and highlight the new.
-	if (LastActor != CurrentActor)
+	if (auto* CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor()); LastActor != CurrentActor)
 	{
 		if (LastActor != nullptr)
 		{
