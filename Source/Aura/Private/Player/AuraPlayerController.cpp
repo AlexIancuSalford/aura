@@ -4,10 +4,18 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -49,5 +57,35 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+	}
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	// Attempt to get the actor under the cursor. If no actor is hit, return early.
+	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHit) || !CursorHit.bBlockingHit) 
+	{
+		return;
+	}
+
+	// Store the currently hit actor in a temporary variable.
+	auto* CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor());
+    
+	// If we've moved from one actor to another, unhighlight the last and highlight the new.
+	if (LastActor != CurrentActor)
+	{
+		if (LastActor != nullptr)
+		{
+			LastActor->UnHighlightActor();
+		}
+
+		if (CurrentActor != nullptr)
+		{
+			CurrentActor->HighlightActor();
+		}
+        
+		// Update LastActor to the current one for the next call.
+		LastActor = CurrentActor;
 	}
 }
