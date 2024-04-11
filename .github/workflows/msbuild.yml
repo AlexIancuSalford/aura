@@ -1,9 +1,7 @@
 name: Build Unreal Engine 5 Game
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -28,4 +26,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-build
-        path: .\Builds\*
+        path: .\Builds
