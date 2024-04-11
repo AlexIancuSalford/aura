@@ -1,0 +1,31 @@
+name: Build Unreal Engine 5 Game
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-windows:
+    name: Build for Windows
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Setup MSBuild
+    # Note: This step is necessary for compiling C++ projects; it may vary based on your project's requirements.
+    - name: Setup MSBuild path
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    # Build the Unreal Engine project
+    - name: Build UE5 Project
+      run: |
+        "C:\Program Files\Epic Games\UE_5.0\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="YourProjectPath\YourProject.uproject" -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -cook -build -stage -pak -archive -archivedirectory=".\Builds"
+    
+    # Upload the build as an artifact
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-build
+        path: .\Builds\*
