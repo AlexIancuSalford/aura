@@ -19,11 +19,11 @@ jobs:
     # Build the Unreal Engine project
     - name: Build UE5 Project
       run: |
-        & "C:\Program Files\Epic Games\UE_5.3\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="D:\Game Dev\Aura_UE_Version_5_3\Aura\Aura.uproject" -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -cook -build -stage -pak -archive -archivedirectory=".\Builds"
+        & "C:\Program Files\Epic Games\UE_5.3\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="D:\Game Dev\Aura_UE_Version_5_3\Aura\Aura.uproject" -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -cook -build -stage -pak -archive -archivedirectory="C:\Users\iancu\actions-runner\_work\Builds\"
     
     # Upload the build as an artifact
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: windows-build
-        path: .\Builds
+        path: C:\Users\iancu\actions-runner\_work\Builds\*
