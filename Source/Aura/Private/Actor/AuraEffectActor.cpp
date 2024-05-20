@@ -75,15 +75,15 @@ void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 
 	if (InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
 	{
-		UAbilitySystemComponent* TargetAbiltySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-		if (!IsValid(TargetAbiltySystemComponent)) { return; }
+		UAbilitySystemComponent* TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+		if (!IsValid(TargetAbilitySystemComponent)) { return; }
 
 		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
 		for (TTuple<FActiveGameplayEffectHandle, UAbilitySystemComponent*> HandlePair: ActiveEffectHandles)
 		{
-			if (TargetAbiltySystemComponent == HandlePair.Value)
+			if (TargetAbilitySystemComponent == HandlePair.Value)
 			{
-				TargetAbiltySystemComponent->RemoveActiveGameplayEffect(HandlePair.Key, 1);
+				TargetAbilitySystemComponent->RemoveActiveGameplayEffect(HandlePair.Key, 1);
 				HandlesToRemove.Add(HandlePair.Key);
 			}
 		}
