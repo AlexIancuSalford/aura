@@ -51,6 +51,9 @@ protected:
 
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	float ActorLevel = 1.f;
+
 #pragma region Instant gameplay effects
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
