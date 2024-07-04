@@ -1,4 +1,4 @@
-// Copywright AI
+// Copyright AI
 
 
 #include "Character/AuraCharacter.h"
@@ -55,4 +55,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	InitPrimaryAttributes();
 }
