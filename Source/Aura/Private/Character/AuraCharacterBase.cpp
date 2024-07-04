@@ -1,6 +1,7 @@
 // Copywright AI
 
 #include "Character/AuraCharacterBase.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 AAuraCharacterBase::AAuraCharacterBase()
@@ -28,4 +29,13 @@ void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AAuraCharacterBase::InitPrimaryAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultPrimaryAttributes);
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
