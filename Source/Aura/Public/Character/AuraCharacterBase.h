@@ -1,4 +1,4 @@
-// Copywright AI
+// Copyright AI
 
 #pragma once
 
@@ -30,7 +30,8 @@ protected:
 
 	virtual void InitAbilityActorInfo() {}
 
-	void InitPrimaryAttributes() const;
+	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const;
+	void InitializeDefaultAttributes() const;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -43,4 +44,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 };
