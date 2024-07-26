@@ -11,6 +11,7 @@ class UAuraInputConfig;
 class UInputMappingContext;
 class UInputAction;
 class IEnemyInterface;
+class UAuraAbilitySystemComponent;
 
 /**
  * 
@@ -30,12 +31,6 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	UPROPERTY(EditAnywhere, Category="Input")
-	TObjectPtr<UInputMappingContext> AuraContext;
-
-	UPROPERTY(EditAnywhere, Category="Input")
-	TObjectPtr<UInputAction> MoveAction;
-
 	void Move(const struct FInputActionValue& InputActionValue);
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
@@ -44,8 +39,19 @@ private:
 
 	void CursorTrace();
 
+	UAuraAbilitySystemComponent* GetAbilitySystemComponent();
+	
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputMappingContext> AuraContext;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> MoveAction;
+
 	IEnemyInterface* LastActor;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 };

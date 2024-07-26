@@ -1,7 +1,10 @@
 // Copyright AI
 
 #include "Player/AuraPlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
@@ -62,17 +65,19 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	if (GetAbilitySystemComponent() == nullptr) return;
+	GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 }
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+	if (GetAbilitySystemComponent() == nullptr) return;
+	GetAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 }
 
 void AAuraPlayerController::CursorTrace()
@@ -102,4 +107,14 @@ void AAuraPlayerController::CursorTrace()
 		// Update LastActor to the current one for the next call.
 		LastActor = CurrentActor;
 	}
+}
+
+UAuraAbilitySystemComponent* AAuraPlayerController::GetAbilitySystemComponent()
+{
+	if (AuraAbilitySystemComponent == nullptr)
+	{
+		AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+
+	return AuraAbilitySystemComponent;
 }
