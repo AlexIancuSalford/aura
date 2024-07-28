@@ -59,6 +59,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 
+	FHitResult CursorHitResult;
+
 #pragma region Click to move
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;

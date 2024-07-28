@@ -142,9 +142,9 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
 
-		if (FHitResult Hit; GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+		if (CursorHitResult.bBlockingHit)
 		{
-			CachedDestination = Hit.ImpactPoint;
+			CachedDestination = CursorHitResult.ImpactPoint;
 		}
 
 		if (APawn* ControlledPawn = GetPawn())
@@ -157,15 +157,14 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 
 void AAuraPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	// Attempt to get the actor under the cursor. If no actor is hit, return early.
-	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHit) || !CursorHit.bBlockingHit) 
+	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHitResult) || !CursorHitResult.bBlockingHit) 
 	{
 		return;
 	}
 
 	// If we've moved from one actor to another, unhighlight the last and highlight the new.
-	if (CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor()); LastActor != CurrentActor)
+	if (CurrentActor = Cast<IEnemyInterface>(CursorHitResult.GetActor()); LastActor != CurrentActor)
 	{
 		if (LastActor != nullptr)
 		{
