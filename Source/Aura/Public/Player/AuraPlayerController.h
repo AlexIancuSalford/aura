@@ -40,6 +40,8 @@ private:
 
 	void CursorTrace();
 
+	void AutoRun();
+
 	UAuraAbilitySystemComponent* GetAbilitySystemComponent();
 	
 	UPROPERTY(EditAnywhere, Category="Input")
