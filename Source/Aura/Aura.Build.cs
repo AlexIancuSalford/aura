@@ -1,4 +1,4 @@
-// Copywright AI
+// Copyright AI
 
 using UnrealBuildTool;
 
