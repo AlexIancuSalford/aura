@@ -2,6 +2,7 @@
 
 
 #include "AuraGameplayTags.h"
+
 #include "GameplayTagsManager.h"
 
 FAuraGameplayTags FAuraGameplayTags::GameplayTags;
@@ -73,7 +74,7 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("InputTag.LMB"),
 		FString("Input Tag for Left Mouse Button"));
 	
-	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	GameplayTags.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.RMB"),
 		FString("Input Tag for Right Mouse Button"));
 
@@ -92,5 +93,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.4"),
 		FString("Input Tag for 4 key"));
+
+#pragma endregion
+
+#pragma region Damage
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage"),
+		FString("Damage"));
 #pragma endregion 
 }
