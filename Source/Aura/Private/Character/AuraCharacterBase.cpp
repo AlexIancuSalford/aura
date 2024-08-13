@@ -1,6 +1,7 @@
 // Copyright AI
 
 #include "Character/AuraCharacterBase.h"
+
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
@@ -26,6 +27,11 @@ AAuraCharacterBase::AAuraCharacterBase()
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
 }
 
 UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
