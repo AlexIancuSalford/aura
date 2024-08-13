@@ -23,11 +23,18 @@ public:
 	
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	virtual int32 GetPlayerLevel() override;
 
 	UPROPERTY(BlueprintReadOnly);
 	bool bIsHighlighted = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 250.f;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChanged;
