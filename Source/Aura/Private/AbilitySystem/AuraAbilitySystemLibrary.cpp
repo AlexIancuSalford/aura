@@ -1,6 +1,5 @@
 // Copyright AI
 
-
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 #include "Game/AuraGameModeBase.h"
@@ -68,4 +67,17 @@ void UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(const UObject* World
 	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(AuraGameModeBase->CharacterClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
+}
+
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject,
+	UAbilitySystemComponent* AbilitySystemComponent)
+{
+	const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (AuraGameModeBase == nullptr) return;
+
+	for(const UCharacterClassInfo* CharacterClassInfo = AuraGameModeBase->CharacterClassInfo; const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1.f);
+		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
 }
