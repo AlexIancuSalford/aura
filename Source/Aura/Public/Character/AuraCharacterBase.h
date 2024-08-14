@@ -42,6 +42,12 @@ protected:
 
 	void AddCharacterAbilities();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	void Dissolve();
+
 	virtual FVector GetCombatSocketLocation() override;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
@@ -64,6 +70,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
