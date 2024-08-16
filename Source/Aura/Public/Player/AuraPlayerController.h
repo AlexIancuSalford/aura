@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
+class UDamageTextComponent;
 class USplineComponent;
 class UAuraInputConfig;
 class UInputMappingContext;
@@ -27,6 +28,8 @@ public:
 
 	virtual void PlayerTick(float DeltaTime) override;
 
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(ACharacter* TargetCharacter, float DamageNumber);
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -60,6 +63,9 @@ private:
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 
 	FHitResult CursorHitResult;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 
 #pragma region Click to move
 	FVector CachedDestination = FVector::ZeroVector;

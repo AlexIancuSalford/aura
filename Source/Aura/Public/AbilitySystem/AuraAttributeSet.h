@@ -203,4 +203,5 @@ public:
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
+	void ShowFloaringText(const FEffectProperties& Props, float Damage) const;
 };
