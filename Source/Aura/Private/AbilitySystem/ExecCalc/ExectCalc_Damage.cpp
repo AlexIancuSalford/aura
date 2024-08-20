@@ -4,15 +4,18 @@
 #include "AbilitySystem/ExecCalc/ExectCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 struct AuraDamageStatics
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	
 	AuraDamageStatics()
 	{
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 	}
 };
 
@@ -25,6 +28,7 @@ static const AuraDamageStatics& DamageStatics()
 UExectCalc_Damage::UExectCalc_Damage()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 }
 
 void UExectCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -45,15 +49,20 @@ void UExectCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecut
 	EvaluateParameters.SourceTags = SourceTags;
 	EvaluateParameters.TargetTags = TargetTags;
 
-	float Armor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluateParameters, Armor);
-	Armor = FMath::Max<float>(0.f, Armor);
-	++Armor;
+	// Get Damage set by caller magnitude
+	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
+
+	// Capture BlockChance on target and determine if it was a successful block.
+	// If Block, halve the damage.
+	float TargetBlockChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluateParameters, TargetBlockChance);
+	const bool bShouldBlock = FMath::RandRange(1, 100) < TargetBlockChance;
+	Damage = bShouldBlock ? Damage / 2.f : Damage;
 
 	const FGameplayModifierEvaluatedData EvaluatedData(
-		DamageStatics().ArmorProperty,
+		UAuraAttributeSet::GetIncomingDamageAttribute(),
 		EGameplayModOp::Additive,
-		Armor
+		Damage
 	);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
