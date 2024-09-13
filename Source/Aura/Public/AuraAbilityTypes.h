@@ -11,6 +11,7 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 public:
 	virtual UScriptStruct* GetScriptStruct() const override;
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
+	virtual FAuraGameplayEffectContext* Duplicate() const override;
 
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	bool IsBlockedHit() const { return bIsBlockedHit; }
@@ -24,4 +25,14 @@ protected:
 
 	UPROPERTY()
 	bool bIsBlockedHit = false;
+};
+
+template<>
+struct TStructOpsTypeTraits<FAuraGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FAuraGameplayEffectContext>
+{
+	enum
+	{
+		WidthNetSerializer = true,
+		WithCopy = true
+	};
 };

@@ -2,7 +2,7 @@
 
 UScriptStruct* FAuraGameplayEffectContext::GetScriptStruct() const
 {
-	return FGameplayEffectContext::StaticStruct();
+	return StaticStruct();
 }
 
 bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
@@ -76,7 +76,7 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!HitResult.IsValid())
 			{
-				HitResult = TSharedPtr<FHitResult>(new FHitResult());
+				HitResult = MakeShared<FHitResult>();
 			}
 		}
 		HitResult->NetSerialize(Ar, Map, bOutSuccess);
@@ -108,4 +108,18 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	
 	bOutSuccess = true;
 	return true;
+}
+
+FAuraGameplayEffectContext* FAuraGameplayEffectContext::Duplicate() const
+{
+	FAuraGameplayEffectContext* NewContext = new FAuraGameplayEffectContext();
+	*NewContext = *this;
+
+	if (GetHitResult())
+	{
+		// Does a deep copy of the hit result.
+		NewContext->AddHitResult(*GetHitResult(), true);
+	}
+
+	return NewContext;
 }
