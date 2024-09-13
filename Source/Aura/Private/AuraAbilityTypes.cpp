@@ -50,8 +50,6 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 
 	Ar.SerializeBits(&RepBits, 9);
 
-	Ar.SerializeBits(&RepBits, 7);
-
 	if (RepBits & (1 << 0))
 	{
 		Ar << Instigator;
