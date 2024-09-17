@@ -105,10 +105,47 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Damage.Fire"),
 		FString("Fire Damage Type"));
 
+	GameplayTags.Lightning_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Lightning"),
+		FString("Lightning Damage Type"));
+
+	GameplayTags.Magic_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Magic"),
+		FString("Magic Damage Type"));
+	
+	GameplayTags.Physical_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Physical"),
+		FString("Physical Damage Type"));
+
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Effects.HitReact"),
 		FString("Tag granted when Hit Reacting"));
 
-	GameplayTags.DamageTypes.Add(GameplayTags.Fire_Damage);
+#pragma endregion
+
+#pragma region Resistances
+	GameplayTags.Attributes_Resistance_Magic = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Magic"),
+		FString("Resistance to Magic damage"));
+
+	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Fire"),
+		FString("Resistance to Fire damage"));
+
+	GameplayTags.Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Lightning"),
+		FString("Resistance to Lightning damage"));
+
+	GameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Physical"),
+		FString("Resistance to Physical damage"));
+
+#pragma endregion
+
+#pragma region Map of Damage types to Resistances
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Magic_Damage, GameplayTags.Attributes_Resistance_Magic);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Fire_Damage, GameplayTags.Attributes_Resistance_Fire);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Lightning_Damage, GameplayTags.Attributes_Resistance_Lightning);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Physical_Damage, GameplayTags.Attributes_Resistance_Physical);
 #pragma endregion 
 }
