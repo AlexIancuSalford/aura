@@ -10,6 +10,9 @@
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class AAuraAIController;
+
 /**
  * 
  */
@@ -24,6 +27,8 @@ public:
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	virtual void Die() override;
+	virtual void PossessedBy(AController* NewController) override;
+	
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	virtual int32 GetPlayerLevel() override;
@@ -59,4 +64,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };
