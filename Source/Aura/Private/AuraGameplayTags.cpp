@@ -142,6 +142,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 
 #pragma endregion
 
+#pragma region Abilities
+	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Attack"),
+		FString("Attack Ability Tag"));
+#pragma endregion 
+
 #pragma region Map of Damage types to Resistances
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Magic_Damage, GameplayTags.Attributes_Resistance_Magic);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Fire_Damage, GameplayTags.Attributes_Resistance_Fire);
