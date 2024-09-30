@@ -4,6 +4,7 @@
 
 #include "AuraAbilityTypes.h"
 #include "Game/AuraGameModeBase.h"
+#include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/WidgetController/AuraWidgetController.h"
@@ -50,7 +51,7 @@ void UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(const UObject* World
 	const AActor* AvatarActor = AbilitySystemComponent->GetAvatarActor();
 
 	const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
-	const auto [PrimaryAttributes] = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	const auto [PrimaryAttributes, StartupAbilities] = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = AbilitySystemComponent->MakeEffectContext();
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
@@ -69,12 +70,25 @@ void UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(const UObject* World
 }
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject,
-	UAbilitySystemComponent* AbilitySystemComponent)
+	UAbilitySystemComponent* AbilitySystemComponent, ECharacterClass CharacterClass)
 {
-	for (const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject); const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (CharacterClassInfo == nullptr) return;
+	
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1.f);
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
+	
+	const FCharacterClassDefaultInfo& DefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	for (TSubclassOf<UGameplayAbility> AbilityClass : DefaultInfo.StartupAbilities)
+	{
+		if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(AbilitySystemComponent->GetAvatarActor()))
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			AbilitySystemComponent->GiveAbility(AbilitySpec);
+		}
 	}
 }
 
