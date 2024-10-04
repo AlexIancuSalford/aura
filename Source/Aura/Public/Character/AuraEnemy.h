@@ -33,6 +33,9 @@ public:
 
 	virtual int32 GetPlayerLevel() override;
 
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+
 	UPROPERTY(BlueprintReadOnly);
 	bool bIsHighlighted = false;
 
@@ -50,6 +53,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 
 protected:
 	virtual void BeginPlay() override;
