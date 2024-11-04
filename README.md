@@ -20,7 +20,18 @@ Follow these steps to set up a new character based on the existing enemy framewo
       * Locate the desired hit react animation.
       * Right-click, select Create > Create Anim Montage.
       * Follow the naming convention: AM_HitReact_[EnemyName].
-   2. Set Character Properties: Define the character’s class, level, and lifespan (duration until the character de-spawns after death).
+   2. Add attack montage(s): To create anim montages:
+      * Locate desired attack animation(s).
+      * Open newly created anim montage and add "Motion Warping" notify track.
+      * Set notify state of the motion warping state by right-clicking on the timeline and adding a motion warping notify state.
+      * Set "Warp Target Name" to "FacingTarget".
+      * Uncheck "Warp Translation".
+      * Set "Rotation Type" to "Facing".
+      * Add "Events" notify track.
+      * Add notify for the events track by right-clicking on the timeline and selecting Add Notify... -> AN_MontageEvent.
+      * Set the correct event tag for the AN_MontageEvent. (all attacks have a separate tag under "Montage.Attack").
+      * Go to your animation blueprint and add the attack anim montages(s) to the "Attack Montages" array (Note: The montage tag in the array should be set to the same one the anim montage hass).
+   3. Set Character Properties: Define the character’s class, level, and lifespan (duration until the character de-spawns after death).
 
 ## 5. Configure Animation Blueprint
    1. Open your animation blueprint from APB_Enemy, and set up the Blend Space:
