@@ -156,3 +156,17 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		}
 	}
 }
+
+bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	// Define the faction tags
+	static const FName PlayerTag("Player");
+	static const FName EnemyTag("Enemy");
+
+	// Check if both actors share the same faction tag
+	const bool AreFriends = 
+		(FirstActor->ActorHasTag(PlayerTag) && SecondActor->ActorHasTag(PlayerTag)) ||
+		(FirstActor->ActorHasTag(EnemyTag) && SecondActor->ActorHasTag(EnemyTag));
+
+	return !AreFriends;
+}
