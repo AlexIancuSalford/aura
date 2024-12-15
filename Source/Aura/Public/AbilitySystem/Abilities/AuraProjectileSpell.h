@@ -8,6 +8,7 @@
 #include "AuraProjectileSpell.generated.h"
 
 class AAuraProjectile;
+struct FGameplayTagContainer;
 
 /**
  * 
@@ -21,7 +22,7 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Projectile")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation) const;
+	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
