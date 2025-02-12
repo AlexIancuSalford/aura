@@ -26,12 +26,6 @@ jobs:
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.0.2
 
-      # Allow script execution (temporarily for this run)
-      - name: Allow PowerShell Script Execution
-        run: |
-          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-        shell: powershell
-
       # Build Unreal Project
       - name: Build UE5 Project
         run: |
@@ -40,12 +34,6 @@ jobs:
             -noP4 -platform=Win64 -clientconfig=Development `
             -serverconfig=Development -cook -build -stage -pak `
             -archive -archivedirectory="$env:BUILD_OUTPUT_PATH"
-        shell: powershell
-
-      # Reset execution policy back to Restricted after the build
-      - name: Reset PowerShell Execution Policy
-        run: |
-          Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope Process
         shell: powershell
 
       # Upload the build as an artifact
