@@ -7,9 +7,14 @@ on:
   pull_request:
     branches:
       - master
+
 jobs:
   build:
     runs-on: self-hosted
+
+    env:
+      UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
+      BUILD_OUTPUT_PATH: ${{ secrets.BUILD_OUTPUT_PATH }}
 
     steps:
       - name: Checkout Repository
@@ -17,18 +22,22 @@ jobs:
         with:
           submodules: true
 
-        # Setup MSBuild
-        # Note: This step is necessary for compiling C++ projects; it may vary based on your project's requirements.
+      # Setup MSBuild
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.0.2
 
+      # Build Unreal Project (Uses GitHub Secrets for paths)
       - name: Build UE5 Project
         run: |
-          & "C:\Program Files\Epic Games\UE_5.3\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="D:\Game Dev\Aura_UE_Version_5_3\Aura\Aura.uproject" -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -cook -build -stage -pak -archive -archivedirectory="C:\Users\iancu\actions-runner\_work\Builds\"
-    
-    # Upload the build as an artifact
+          & "C:\Program Files\Epic Games\UE_5.3\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
+            -project="$env:UE_PROJECT_PATH" `
+            -noP4 -platform=Win64 -clientconfig=Development `
+            -serverconfig=Development -cook -build -stage -pak `
+            -archive -archivedirectory="$env:BUILD_OUTPUT_PATH"
+
+      # Upload the build as an artifact
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: D:\Repos\actions-runner\_work\Builds\*
+          path: ${{ env.BUILD_OUTPUT_PATH }}
