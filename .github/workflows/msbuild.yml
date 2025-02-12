@@ -1,12 +1,7 @@
 name: Build Unreal Engine 5 Project
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +9,7 @@ jobs:
 
     env:
       UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
-      BUILD_OUTPUT_PATH: ${{ secrets.BUILD_OUTPUT_PATH }}
+      BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output
 
     steps:
       - name: Checkout Repository
@@ -41,4 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: ${{ env.BUILD_OUTPUT_PATH }}
+          path: ${{ github.workspace }}/build-output
+          retention-days: 7
