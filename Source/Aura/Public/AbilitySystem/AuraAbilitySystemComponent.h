@@ -7,6 +7,7 @@
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&)
+DECLARE_MULTICAST_DELEGATE_OneParam(FAbilitiesGiven, const UAuraAbilitySystemComponent*)
 
 /**
  * 
@@ -25,6 +26,9 @@ public:
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 
 	FEffectAssetTags EffectAssetTags;
+	FAbilitiesGiven AbilitiesGivenDelegate;
+
+	bool bStartupAbilitiesGiven = false;
 
 protected:
 	UFUNCTION(Client, Reliable)
