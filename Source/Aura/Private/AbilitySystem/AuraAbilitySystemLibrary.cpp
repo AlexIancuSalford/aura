@@ -51,7 +51,7 @@ void UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(const UObject* World
 	const AActor* AvatarActor = AbilitySystemComponent->GetAvatarActor();
 
 	const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
-	const auto [PrimaryAttributes, StartupAbilities] = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	const auto [PrimaryAttributes, StartupAbilities, XPReward] = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = AbilitySystemComponent->MakeEffectContext();
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
@@ -169,4 +169,16 @@ bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
 		(FirstActor->ActorHasTag(EnemyTag) && SecondActor->ActorHasTag(EnemyTag));
 
 	return !AreFriends;
+}
+
+int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject,
+	const ECharacterClass CharacterClass, const int32 Level)
+{
+	const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (CharacterClassInfo == nullptr) return 0;
+
+	FCharacterClassDefaultInfo Info = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	const float XPReward = Info.XPReward.GetValueAtLevel(Level);
+
+	return static_cast<int32>(XPReward);
 }
