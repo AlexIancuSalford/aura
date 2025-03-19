@@ -142,6 +142,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 
 #pragma endregion
 
+#pragma region Meta
+	GameplayTags.Attributes_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Meta.IncomingXP"),
+		FString("Incoming XP meta attribute"));
+#pragma endregion
+	
 #pragma region Abilities
 	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Abilities.Attack"),
