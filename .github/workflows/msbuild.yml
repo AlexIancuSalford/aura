@@ -1,40 +1,68 @@
 name: Build Unreal Engine 5 Project
-
 on:
   workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'Platforms to build for'
+        required: true
+        default: 'Windows,Linux,Mac'
+        type: choice
+        options:
+          - 'Windows,Linux,Mac'
+          - 'Windows'
+          - 'Linux'
+          - 'Mac'
+          - 'Windows,Linux'
+          - 'Windows,Mac'
+          - 'Linux,Mac'
 
 jobs:
   build:
     runs-on: self-hosted
-
+    strategy:
+      matrix:
+        platform: ['Windows', 'Linux', 'Mac']
+        include:
+          - platform: 'Windows'
+            ue_platform: 'Win64'
+            output_dir: 'windows'
+          - platform: 'Linux'
+            ue_platform: 'Linux'
+            output_dir: 'linux'
+          - platform: 'Mac'
+            ue_platform: 'Mac'
+            output_dir: 'mac'
+      fail-fast: false
+    if: contains(github.event.inputs.platforms, matrix.platform)
     env:
       UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
-      BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output
-
+      BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-${{ matrix.output_dir }}
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: true
-
-      # Setup MSBuild
+          
+      # Setup MSBuild (needed for Windows builds)
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.0.2
-
-      # Build Unreal Project
-      - name: Build UE5 Project
+        
+      # Build Unreal Project for selected platform
+      - name: Build UE5 Project for ${{ matrix.platform }}
         run: |
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
-            -noP4 -platform=Win64 -clientconfig=Development `
+            -noP4 -platform=${{ matrix.ue_platform }} -clientconfig=Development `
             -serverconfig=Development -cook -build -stage -pak `
-            -archive -archivedirectory="$env:BUILD_OUTPUT_PATH"
+            -archive -archivedirectory="$env:BUILD_OUTPUT_PATH" `
+            -targetplatform=${{ matrix.ue_platform }}
         shell: powershell
-
+        
       # Upload the build as an artifact
-      - name: Upload Build Artifact
+      - name: Upload ${{ matrix.platform }} Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: ${{ github.workspace }}/build-output
-          retention-days: 7
+          name: ${{ matrix.output_dir }}-build
+          path: ${{ env.BUILD_OUTPUT_PATH }}
+          retention-days: 14
