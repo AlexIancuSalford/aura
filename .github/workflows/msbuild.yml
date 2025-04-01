@@ -32,7 +32,6 @@ jobs:
     env:
       UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
       BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-windows
-      BUILD_CONFIG: ${{ github.event.inputs.configuration }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -48,8 +47,8 @@ jobs:
         run: |
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
-            -noP4 -platform=Win64 -clientconfig=$env:BUILD_CONFIG `
-            -serverconfig=$env:BUILD_CONFIG -cook -build -stage -pak `
+            -noP4 -platform=Win64 -clientconfig=${{ github.event.inputs.configuration }} `
+            -serverconfig=${{ github.event.inputs.configuration }} -cook -build -stage -pak `
             -archive -archivedirectory="$env:BUILD_OUTPUT_PATH"
         shell: powershell
         
@@ -67,7 +66,6 @@ jobs:
     env:
       UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
       BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-linux
-      BUILD_CONFIG: ${{ github.event.inputs.configuration }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -85,7 +83,7 @@ jobs:
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
             -noP4 `
-            -clientconfig=$env:BUILD_CONFIG `
+            -clientconfig=${{ github.event.inputs.configuration }} `
             -TargetPlatform=Linux `
             -cook -build -stage -pak -skipstage `
             -archive -archivedirectory="$env:BUILD_OUTPUT_PATH" `
@@ -131,7 +129,7 @@ jobs:
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
             -noP4 `
-            -clientconfig=$env:BUILD_CONFIG `
+            -clientconfig=${{ github.event.inputs.configuration }} `
             -TargetPlatform=Linux `
             -utf8output `
             -cook -build -stage -pak `
@@ -155,7 +153,6 @@ jobs:
     env:
       UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
       BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-mac
-      BUILD_CONFIG: ${{ github.event.inputs.configuration }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -173,7 +170,7 @@ jobs:
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
             -noP4 `
-            -clientconfig=$env:BUILD_CONFIG `
+            -clientconfig=${{ github.event.inputs.configuration }} `
             -TargetPlatform=Mac `
             -cook -build -stage -pak -skipstage `
             -archive -archivedirectory="$env:BUILD_OUTPUT_PATH" `
@@ -219,7 +216,7 @@ jobs:
           & "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
             -project="$env:UE_PROJECT_PATH" `
             -noP4 `
-            -clientconfig=$env:BUILD_CONFIG `
+            -clientconfig=${{ github.event.inputs.configuration }} `
             -TargetPlatform=Mac `
             -utf8output `
             -cook -build -stage -pak `
