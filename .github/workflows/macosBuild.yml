@@ -1,4 +1,4 @@
-name: Build Unreal Engine 5 Project
+name: Build Unreal Engine 5 Project - MacOS
 
 on:
   workflow_dispatch:
