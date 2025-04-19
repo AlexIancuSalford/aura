@@ -1,0 +1,42 @@
+name: Build Unreal Engine 5 Project
+
+on:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build configuration'
+        required: true
+        default: 'Development'
+        type: choice
+        options:
+          - 'Development'
+          - 'Shipping'
+          - 'DebugGame'
+
+jobs:
+  build-macos:
+    runs-on: self-hosted
+    env:
+      UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH_MAC }}
+      BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-macos
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build UE5 Project for macOS
+        run: |
+          /Users/Shared/Epic\ Games/UE_5.5/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun \
+            -project="${UE_PROJECT_PATH}" \
+            -noP4 -platform=Mac -clientconfig=${{ github.event.inputs.configuration }} \
+            -serverconfig=${{ github.event.inputs.configuration }} -cook -build -stage -pak \
+            -archive -archivedirectory="${BUILD_OUTPUT_PATH}"
+        shell: bash
+
+      - name: Upload macOS Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ github.event.inputs.configuration }}-build
+          path: ${{ env.BUILD_OUTPUT_PATH }}
+          retention-days: 7
