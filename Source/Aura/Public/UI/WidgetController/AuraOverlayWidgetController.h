@@ -65,6 +65,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="GAS|Level")
 	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
 
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const;
+
 protected:
 	template<typename T>
 	T* GetDatatableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
