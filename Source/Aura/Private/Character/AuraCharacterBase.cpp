@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,6 +15,10 @@ AAuraCharacterBase::AAuraCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
+	BurnDebuffComponent->SetupAttachment(GetRootComponent());
+	BurnDebuffComponent->DebuffTag = FAuraGameplayTags::Get().Debuff_Burn;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
@@ -58,11 +63,22 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	Dissolve();
 	bDead = true;
+	OnDeath.Broadcast(this);
 }
 
 UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
 {
 	return AttributeSet;
+}
+
+FOnASCRegistered AAuraCharacterBase::GetOnAscRegisteredDelegate()
+{
+	return OnAscRegistered;
+}
+
+FOnDeath& AAuraCharacterBase::GetOnDeathDelegate()
+{
+	return OnDeath;
 }
 
 // Called when the game starts or when spawned

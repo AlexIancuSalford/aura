@@ -9,6 +9,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -32,6 +33,9 @@ public:
 	virtual void MulticastHandleDeath();
 
 	UAttributeSet* GetAttributeSet() const;
+
+	virtual FOnASCRegistered GetOnAscRegisteredDelegate() override;
+	virtual FOnDeath& GetOnDeathDelegate() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -111,6 +115,12 @@ protected:
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	int32 MinionCount = 0;
+
+	FOnASCRegistered OnAscRegistered;
+	FOnDeath OnDeath;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
