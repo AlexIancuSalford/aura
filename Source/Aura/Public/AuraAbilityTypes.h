@@ -70,6 +70,7 @@ public:
 	void SetDebuffDamage(float InDamage) { DebuffDamage = InDamage; }
 	void SetDebuffDuration(float InDuration) { DebuffDuration = InDuration; }
 	void SetDebuffFrequency(float InFrequency) { DebuffFrequency = InFrequency; }
+	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
 
 protected:
 	UPROPERTY()
