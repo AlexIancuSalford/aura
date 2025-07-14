@@ -51,7 +51,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	int32 GetPlayerLevel();
 
-	virtual void Die() = 0;
+	virtual void Die(const FVector& DeathImpulse) = 0;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
