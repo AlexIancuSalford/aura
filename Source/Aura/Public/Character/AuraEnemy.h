@@ -25,7 +25,7 @@ public:
 	
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	virtual void PossessedBy(AController* NewController) override;
 	
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
