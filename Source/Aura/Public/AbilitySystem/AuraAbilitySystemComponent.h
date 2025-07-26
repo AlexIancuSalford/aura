@@ -34,6 +34,7 @@ public:
 	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
 
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
 
@@ -57,6 +58,8 @@ public:
 
 	void ClearAbilitiesOfSlot(const FGameplayTag& Slot);
 	static bool AbilityHasSlot(FGameplayAbilitySpec* Spec, const FGameplayTag& Slot);
+
+	void RegisterActivationPredictionKey(FGameplayAbilitySpecHandle Handle, FPredictionKey PredictionKey);
 	
 	FEffectAssetTags EffectAssetTags;
 	FAbilitiesGiven AbilitiesGivenDelegate;
@@ -73,6 +76,8 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
+
+	TMap<FGameplayAbilitySpecHandle, FPredictionKey> ActiveAbilityPredictionKeys;
 };
 
 inline void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
