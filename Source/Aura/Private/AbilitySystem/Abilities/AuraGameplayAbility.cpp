@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
@@ -18,6 +19,20 @@ FString UAuraGameplayAbility::GetNextLevelDescription(int32 Level)
 FString UAuraGameplayAbility::GetLockedDescription(int32 Level)
 {
 	return FString::Printf(TEXT("<Default>Spell locked until level: </> <Level>%d</>"), Level);
+}
+
+void UAuraGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	StoredPredictionKey = GetCurrentActivationInfo().GetActivationPredictionKey();
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(ASC))
+	{
+		AuraASC->RegisterActivationPredictionKey(Handle, StoredPredictionKey);
+	}
 }
 
 float UAuraGameplayAbility::GetManaCost(const float InLevel) const

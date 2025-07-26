@@ -120,7 +120,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 	}
 }
 
-void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
 
@@ -128,7 +128,32 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
+			AbilitySpecInputPressed(AbilitySpec);
+			if (AbilitySpec.IsActive())
+			{
+				if (const FPredictionKey* FoundKey = ActiveAbilityPredictionKeys.Find(AbilitySpec.Handle))
+				{
+					InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, *FoundKey);
+				}
+			}
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) && AbilitySpec.IsActive())
+		{
+			
 			AbilitySpecInputReleased(AbilitySpec);
+			if (const FPredictionKey* FoundKey = ActiveAbilityPredictionKeys.Find(AbilitySpec.Handle))
+			{
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, *FoundKey);
+			}
 		}
 	}
 }
@@ -247,6 +272,11 @@ bool UAuraAbilitySystemComponent::AbilityHasSlot(FGameplayAbilitySpec* Spec, con
 		}
 	}
 	return false;
+}
+
+void UAuraAbilitySystemComponent::RegisterActivationPredictionKey(FGameplayAbilitySpecHandle Handle, FPredictionKey PredictionKey)
+{
+	ActiveAbilityPredictionKeys.Add(Handle, PredictionKey);
 }
 
 void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
