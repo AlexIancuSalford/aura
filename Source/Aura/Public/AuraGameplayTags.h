@@ -43,6 +43,11 @@ public:
  FGameplayTag InputTag_Passive_1;
  FGameplayTag InputTag_Passive_2;
 
+ FGameplayTag Player_Block_InputPressed;
+ FGameplayTag Player_Block_InputHeld;
+ FGameplayTag Player_Block_InputReleased;
+ FGameplayTag Player_Block_CursorTrace;
+
  FGameplayTag Attributes_Resistance_Fire;
  FGameplayTag Attributes_Resistance_Lightning;
  FGameplayTag Attributes_Resistance_Magic;

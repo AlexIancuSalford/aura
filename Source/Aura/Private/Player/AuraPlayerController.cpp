@@ -72,8 +72,13 @@ void AAuraPlayerController::SetupInputComponent()
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+	{
+		return;
+	}
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
-	const FRotator YawRotation{0.f, GetControlRotation().Yaw, 0.f};
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
@@ -87,57 +92,55 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+	{
+		return;
+	}
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_RMB))
 	{
 		bTargeting = CurrentActor ? true : false;
 		bAutoRunning = false;
 	}
-
-	if (GetAbilitySystemComponent())
-	{
-		GetAbilitySystemComponent()->AbilityInputTagPressed(InputTag);
-	}
+	if (GetAbilitySystemComponent()) GetAbilitySystemComponent()->AbilityInputTagPressed(InputTag);
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased))
+	{
+		return;
+	}
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_RMB))
 	{
-		if (GetAbilitySystemComponent())
-		{
-			GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
-		}
-
+		if (GetAbilitySystemComponent()) GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
-	if (bTargeting)
+	if (GetAbilitySystemComponent()) GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
+	
+	if (!bTargeting && !bShiftKeyDown)
 	{
-		if (GetAbilitySystemComponent())
+		const APawn* ControlledPawn = GetPawn();
+		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
-			GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
-		}
-	}
-	else
-	{
-		if (const APawn* ControlledPawn = GetPawn(); FollowTime <= ShortPressThreshold && ControlledPawn)
-		{
-			if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
+			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
-				for (const FVector& PointLocation : NavigationPath->PathPoints)
+				for (const FVector& PointLoc : NavPath->PathPoints)
 				{
-					Spline->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
+					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
 				}
-				if (NavigationPath->PathPoints.Num() > 0)
+				if (NavPath->PathPoints.Num() > 0)
 				{
-					CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
+					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 					bAutoRunning = true;
 				}
 			}
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			if (GetAbilitySystemComponent() && !GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+			{
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			}
 		}
-
 		FollowTime = 0.f;
 		bTargeting = false;
 	}
@@ -145,31 +148,24 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputHeld))
+	{
+		return;
+	}
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_RMB))
 	{
-		if (GetAbilitySystemComponent())
-		{
-			GetAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
-		}
-
+		if (GetAbilitySystemComponent()) GetAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)
 	{
-		if (GetAbilitySystemComponent())
-		{
-			GetAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetAbilitySystemComponent()) GetAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 	}
 	else
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
-
-		if (CursorHitResult.bBlockingHit)
-		{
-			CachedDestination = CursorHitResult.ImpactPoint;
-		}
+		if (CursorHitResult.bBlockingHit) CachedDestination = CursorHitResult.ImpactPoint;
 
 		if (APawn* ControlledPawn = GetPawn())
 		{
@@ -181,27 +177,24 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 
 void AAuraPlayerController::CursorTrace()
 {
-	// Attempt to get the actor under the cursor. If no actor is hit, return early.
-	if (!GetHitResultUnderCursor(ECC_Visibility, false, CursorHitResult) || !CursorHitResult.bBlockingHit) 
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
 	{
+		if (LastActor) LastActor->UnHighlightActor();
+		if (CurrentActor) CurrentActor->UnHighlightActor();
+		LastActor = nullptr;
+		CurrentActor = nullptr;
 		return;
 	}
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHitResult);
+	if (!CursorHitResult.bBlockingHit) return;
 
-	// If we've moved from one actor to another, unhighlight the last and highlight the new.
-	if (CurrentActor = Cast<IEnemyInterface>(CursorHitResult.GetActor()); LastActor != CurrentActor)
+	LastActor = CurrentActor;
+	CurrentActor = Cast<IEnemyInterface>(CursorHitResult.GetActor());
+
+	if (LastActor != CurrentActor)
 	{
-		if (LastActor != nullptr)
-		{
-			LastActor->UnHighlightActor();
-		}
-
-		if (CurrentActor != nullptr)
-		{
-			CurrentActor->HighlightActor();
-		}
-        
-		// Update LastActor to the current one for the next call.
-		LastActor = CurrentActor;
+		if (LastActor) LastActor->UnHighlightActor();
+		if (CurrentActor) CurrentActor->HighlightActor();
 	}
 }
 
