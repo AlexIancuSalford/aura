@@ -9,6 +9,7 @@ public class AuraEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V4;
+		CppCompileWarningSettings.UndefinedIdentifierWarningLevel = WarningLevel.Error;
 
 		ExtraModuleNames.AddRange( new string[] { "Aura" } );
 	}
