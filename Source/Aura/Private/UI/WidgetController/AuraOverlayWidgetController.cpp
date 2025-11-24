@@ -109,7 +109,7 @@ void UAuraOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& Ability
 void UAuraOverlayWidgetController::OnXPChanged(int32 NewXP)
 {
 	const ULevelUpInfo* LevelUpInfo = GetAuraPlayerState()->LevelUpInfo;
-	checkf(LevelUpInfo, L"Unable to get level up info. Please fill out AuraPlayerState Blueprint");
+	checkf(LevelUpInfo, TEXT("Unable to get level up info. Please fill out AuraPlayerState Blueprint"));
 
 	const int32 Level = LevelUpInfo->FindLevelForXP(NewXP);
 

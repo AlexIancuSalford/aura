@@ -8,7 +8,9 @@
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
 {
-	return FString::Printf(TEXT("<Default>%s, </><Level>%d</>"), L"Default Ability Name - LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum", Level);
+	return FString::Printf(
+		TEXT("<Default>%s, </><Level>%d</>"), 
+		TEXT("Default Ability Name - LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum"), Level);
 }
 
 FString UAuraGameplayAbility::GetNextLevelDescription(int32 Level)
