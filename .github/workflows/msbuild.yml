@@ -1,67 +1,28 @@
-name: Build Unreal Engine 5 Project - Linux Runner (Win + Linux targets)
+name: Upload Unreal Build Artifacts (Windows)
 
 on:
   workflow_dispatch:
     inputs:
-      configuration:
-        description: 'Build configuration'
+      artifact_name:
+        description: "Name of the artifact to upload"
         required: true
-        default: 'Development'
-        type: choice
-        options:
-          - 'Development'
-          - 'Shipping'
-          - 'DebugGame'
+        default: "${{ secrets.UE_ARTIFACT_NAME }}"
+      build_path:
+        description: "Path to your prebuilt Windows package folder"
+        required: true
+        default: "${{ secrets.UE_BUILD_PATH }}"
 
 jobs:
-  build:
-    # Ensure your runner has these labels (you can leave it as just 'self-hosted'
-    # if that's what your runner uses)
-    runs-on: [self-hosted, linux]
-
-    strategy:
-      matrix:
-        # UE platform names used by UBT/UAT
-        target_platform: [Win64, Linux]
-
-    env:
-      # Absolute path to the .uproject file on the Linux machine
-      UE_PROJECT_PATH: ${{ secrets.UE_PROJECT_PATH }}
-      # Root of your UE5 install on Linux, e.g. /home/ue/UnrealEngine/UE_5.5
-      UE_ROOT: ${{ secrets.UE_ROOT }}
+  upload:
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repo (workspace init)
         uses: actions/checkout@v4
-        with:
-          submodules: true
 
-      - name: Build UE5 Project for ${{ matrix.target_platform }}
-        shell: bash
-        env:
-          BUILD_OUTPUT_PATH: ${{ github.workspace }}/build-output-${{ matrix.target_platform }}
-        run: |
-          set -e
-
-          echo "Building for platform: ${{ matrix.target_platform }}"
-          echo "Project: $UE_PROJECT_PATH"
-          echo "UE root: $UE_ROOT"
-          echo "Output: $BUILD_OUTPUT_PATH"
-
-          mkdir -p "$BUILD_OUTPUT_PATH"
-
-          "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun \
-            -project="$UE_PROJECT_PATH" \
-            -noP4 \
-            -platform=${{ matrix.target_platform }} \
-            -clientconfig=${{ github.event.inputs.configuration }} \
-            -serverconfig=${{ github.event.inputs.configuration }} \
-            -cook -build -stage -pak \
-            -archive -archivedirectory="$BUILD_OUTPUT_PATH"
-
-      - name: Upload ${{ matrix.target_platform }} Build Artifact
+      - name: Upload Windows Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target_platform }}-${{ github.event.inputs.configuration }}-build
-          path: ${{ github.workspace }}/build-output-${{ matrix.target_platform }}
+          name: ${{ github.event.inputs.artifact_name }}
+          path: ${{ github.event.inputs.build_path }}
           retention-days: 7
