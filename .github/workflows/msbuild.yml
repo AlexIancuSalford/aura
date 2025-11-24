@@ -6,11 +6,11 @@ on:
       artifact_name:
         description: "Name of the artifact to upload"
         required: true
-        default: "${{ secrets.UE_ARTIFACT_NAME }}"
+        default: "windows-build"
       build_path:
         description: "Path to your prebuilt Windows package folder"
         required: true
-        default: "${{ secrets.UE_BUILD_PATH }}"
+        default: "C:/GameBuilds/MyGame"
 
 jobs:
   upload:
