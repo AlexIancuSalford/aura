@@ -1,4 +1,4 @@
-name: Upload Unreal Build Artifacts (Windows)
+name: Upload Unreal Build Artifacts (Windows, self-hosted)
 
 on:
   workflow_dispatch:
@@ -8,18 +8,16 @@ on:
         required: true
         default: "windows-build"
       build_path:
-        description: "Path to your prebuilt Windows package folder"
+        description: "Path to your prebuilt Windows package folder on the self-hosted runner"
         required: true
-        default: "C:/GameBuilds/MyGame"
+        default: "D:/repos/aura/Build"
 
 jobs:
   upload:
-    runs-on: windows-latest
+    # This must match the labels of your Windows self-hosted runner
+    runs-on: [self-hosted, windows]
 
     steps:
-      - name: Checkout Repo (workspace init)
-        uses: actions/checkout@v4
-
       - name: Upload Windows Build Artifact
         uses: actions/upload-artifact@v4
         with:
