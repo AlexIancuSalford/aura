@@ -39,6 +39,8 @@ public:
 	virtual int32 GetSpellPointsReward_Implementation(int32 Level) const override;
 	
 	virtual int32 FindLevelForXP_Implementation(int32 InXP) const override;
+	
+	virtual void OnRep_Stunned() override;
 
 	FORCEINLINE virtual int32 GetPlayerLevel_Implementation() override;
 
