@@ -36,7 +36,7 @@ public:
 
 	UAttributeSet* GetAttributeSet() const;
 
-	virtual FOnASCRegistered GetOnAscRegisteredDelegate() override;
+	virtual FOnASCRegistered& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeath& GetOnDeathDelegate() override;
 
 protected:
@@ -52,6 +52,9 @@ protected:
 	
 	UFUNCTION()
 	virtual void OnRep_Stunned() {};
+	
+	UFUNCTION()
+	virtual void OnRep_Burned() {};
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
@@ -129,8 +132,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
+	
 	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
 	bool bIsStunned = false;
+	
+	UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
+	bool bIsBurned = false;
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float BaseWalkSpeed = 600.f;

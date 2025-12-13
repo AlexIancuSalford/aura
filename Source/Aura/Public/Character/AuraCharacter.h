@@ -41,6 +41,7 @@ public:
 	virtual int32 FindLevelForXP_Implementation(int32 InXP) const override;
 	
 	virtual void OnRep_Stunned() override;
+	virtual void OnRep_Burned() override;
 
 	FORCEINLINE virtual int32 GetPlayerLevel_Implementation() override;
 
