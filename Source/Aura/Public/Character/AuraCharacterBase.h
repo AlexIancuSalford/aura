@@ -73,6 +73,8 @@ protected:
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	virtual bool IsBeingShocked_Implementation() const override;
+	virtual void SetIsBeingShocked_Implementation(bool bInShock) override;
 
 	bool bDead = false;
 
@@ -140,6 +142,9 @@ protected:
 	
 	UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
 	bool bIsBurned = false;
+	
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	bool bIsBeingShocked = false;
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float BaseWalkSpeed = 600.f;
