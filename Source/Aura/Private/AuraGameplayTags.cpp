@@ -251,6 +251,20 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Abilities.Type.Passive"),
 		FString("Passive None"));
 #pragma endregion
+	
+#pragma region Passive Abilities
+	GameplayTags.Abilities_Passive_HaloOfProtection = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.HaloOfProtection"),
+		FString("Halo Of Protection Passive Ability Tag"));
+
+	GameplayTags.Abilities_Passive_LifeSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.LifeSiphon"),
+		FString("Life Siphon Passive Ability Tag"));
+
+	GameplayTags.Abilities_Passive_ManaSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.ManaSiphon"),
+		FString("Mana Siphon Passive Ability Tag"));
+#pragma endregion
 
 #pragma region Combat Sockets
 	GameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
