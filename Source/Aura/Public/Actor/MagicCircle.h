@@ -15,6 +15,8 @@ public:
 	AMagicCircle();
 	
 	virtual void Tick(float DeltaTime) override;
+	
+	UDecalComponent* GetMagicCircleDecal() const { return MagicCircleDecal; }
 
 protected:
 	virtual void BeginPlay() override;

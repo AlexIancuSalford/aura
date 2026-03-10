@@ -143,6 +143,22 @@ int32 AAuraCharacter::GetSpellPointsReward_Implementation(int32 Level) const
 	return AuraPlayerState->LevelUpInfo->LevelUpInfo[Level].SpellPointAward;
 }
 
+void AAuraCharacter::ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial)
+{
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		AuraPlayerController->ShowMagicCircle(DecalMaterial);
+	}
+}
+
+void AAuraCharacter::HideMagicCircle_Implementation()
+{
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		AuraPlayerController->HideMagicCircle();
+	}
+}
+
 int32 AAuraCharacter::FindLevelForXP_Implementation(int32 InXP) const
 {
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
