@@ -38,6 +38,9 @@ public:
 	virtual int32 GetAttributePointsReward_Implementation(int32 Level) const override;
 	virtual int32 GetSpellPointsReward_Implementation(int32 Level) const override;
 	
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
+	virtual void HideMagicCircle_Implementation() override;
+	
 	virtual int32 FindLevelForXP_Implementation(int32 InXP) const override;
 	
 	virtual void OnRep_Stunned() override;
