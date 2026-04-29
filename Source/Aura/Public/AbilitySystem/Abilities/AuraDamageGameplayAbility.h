@@ -49,6 +49,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float DebuffDuration = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	bool bIsRadialDamage = false;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageInnerRadius = 0.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageOuterRadius = 0.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	FVector RadiaDamageOrigin = FVector::ZeroVector;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DeathImpulseMagnitude = 1000.f;
