@@ -93,7 +93,7 @@ public:
 	FVector GetDeathImpulse() const { return DeathImpulse; }
 	FVector GetKnockbackForce() const { return KnockbackForce; }
 	bool IsRadialDamage() const { return bIsRadialDamage; }
-	FVector GetRadiaDamageOrigin() const { return RadiaDamageOrigin; }
+	FVector GetRadialDamageOrigin() const { return RadiaDamageOrigin; }
 	float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
 	float GetRadialDamageOuterRadius() const { return RadialDamageOuterRadius; }
 
@@ -107,7 +107,7 @@ public:
 	void SetDeathImpulse(const FVector& InImpulse) { DeathImpulse = InImpulse; }
 	void SetKnockbackForce(const FVector& InForce) { KnockbackForce = InForce; }
 	void SetIsRadialDamage(const bool bInIsRadialDamage) { bIsRadialDamage = bInIsRadialDamage; }
-	void SetRadiaDamageOrigin(const FVector& InRadiaDamageOrigin) { RadiaDamageOrigin = InRadiaDamageOrigin; }
+	void SetRadialDamageOrigin(const FVector& InRadiaDamageOrigin) { RadiaDamageOrigin = InRadiaDamageOrigin; }
 	void SetRadialDamageInnerRadius(const float InRadialDamageInnerRadius) { RadialDamageInnerRadius = InRadialDamageInnerRadius; }
 	void SetRadialDamageOuterRadius(const float InRadialDamageOuterRadius) { RadialDamageOuterRadius = InRadialDamageOuterRadius; }
 
