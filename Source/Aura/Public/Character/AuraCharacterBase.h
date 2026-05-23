@@ -33,6 +33,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die(const FVector& DeathImpulse) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
@@ -78,6 +79,7 @@ protected:
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	virtual bool IsBeingShocked_Implementation() const override;
 	virtual void SetIsBeingShocked_Implementation(bool bInShock) override;
+	virtual FOnDamageSignature& GetOnDamageSignature() override;
 
 	bool bDead = false;
 
@@ -133,6 +135,7 @@ protected:
 
 	FOnASCRegistered OnAscRegistered;
 	FOnDeath OnDeath;
+	FOnDamageSignature OnDamageDelegate;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
