@@ -412,6 +412,9 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	
+	UE_LOG(LogTemp, Warning, TEXT("[ApplyDamageEffect] Called | bIsRadialDamage: %d | BaseDamage: %f | DamageType: %s"),
+		DamageEffectParams.bIsRadialDamage, DamageEffectParams.BaseDamage, *DamageEffectParams.DamageType.ToString());
+	
 	FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 	SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
