@@ -17,9 +17,16 @@ class AURA_API UAuraFireBlast : public UAuraDamageGameplayAbility
 public:
 	virtual FString GetDescription(int32 Level) override;
 	virtual FString GetNextLevelDescription(int32 Level) override;
+	
+	UFUNCTION(BlueprintCallable)
+	TArray<class AAuraFireBall*> SpawnFireBalls();
 
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "FireBlast")
 	int32 NumFireBalls = 12;
+	
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "FireBlast")
+	TSubclassOf<AAuraFireBall> FireBallClass;
 };
