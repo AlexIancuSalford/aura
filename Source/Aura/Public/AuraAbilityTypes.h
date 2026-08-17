@@ -70,7 +70,7 @@ struct FDamageEffectParams
 	float RadialDamageOuterRadius = 0.f;
 	
 	UPROPERTY(BlueprintReadWrite)
-	FVector RadiaDamageOrigin = FVector::ZeroVector;
+	FVector RadialDamageOrigin = FVector::ZeroVector;
 };
 
 USTRUCT(BlueprintType)
